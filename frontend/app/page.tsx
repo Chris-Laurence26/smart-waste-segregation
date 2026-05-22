@@ -1,123 +1,53 @@
-"use client";
-
-import { useState } from "react";
-import axios from "axios";
+import Link from "next/link";
 
 export default function Home() {
-
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [preview, setPreview] = useState(null);
-
-  const [prediction, setPrediction] = useState("");
-  const [confidence, setConfidence] = useState("");
-
-  const [loading, setLoading] = useState(false);
-
-  // Handle image selection
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      setSelectedImage(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
-  // Send image to FastAPI
-  const handlePredict = async () => {
-
-    if (!selectedImage) {
-      alert("Please upload an image first.");
-      return;
-    }
-
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("file", selectedImage);
-
-    try {
-
-      const response = await axios.post(
-        "http://127.0.0.1:8000/predict",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }
-      );
-
-      setPrediction(response.data.prediction);
-      setConfidence(response.data.confidence);
-
-    } catch (error) {
-      console.error(error);
-      alert("Prediction failed.");
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <main className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <main className="flex flex-col items-center justify-center text-center px-6 py-20">
 
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-xl">
+      {/* Hero Card */}
+      <div className="bg-white shadow-xl rounded-2xl p-10 max-w-3xl">
 
-        <h1 className="text-3xl font-bold text-center mb-2">
+        <h1 className="text-5xl font-bold mb-4 text-green-600">
           Smart Waste Segregation
         </h1>
 
-        <p className="text-center text-gray-500 mb-6">
-          Upload an image of waste and let AI classify it.
+        <p className="text-gray-600 text-lg mb-6">
+          An AI-powered system that classifies waste images into categories
+          such as plastic, paper, metal, and organic materials.
         </p>
 
-        {/* Upload Input */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="mb-4 w-full"
-        />
+        <div className="flex justify-center gap-4">
+          <Link
+            href="/predict"
+            className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition"
+          >
+            Try It Now
+          </Link>
 
-        {/* Image Preview */}
-        {preview && (
-          <div className="mb-6">
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-full h-64 object-cover rounded-xl border"
-            />
-          </div>
-        )}
+          <Link
+            href="/features"
+            className="border border-green-600 text-green-600 px-6 py-3 rounded-xl hover:bg-green-50 transition"
+          >
+            View Features
+          </Link>
+        </div>
 
-        {/* Predict Button */}
-        <button
-          onClick={handlePredict}
-          className="w-full bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition"
-        >
-          {loading ? "Predicting..." : "Predict Waste"}
-        </button>
+      </div>
 
-        {/* Result */}
-        {prediction && (
-          <div className="mt-6 bg-gray-50 p-4 rounded-xl border">
+      {/* Feature highlights */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 max-w-5xl">
 
-            <h2 className="text-xl font-semibold mb-2">
-              Prediction Result
-            </h2>
+        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+          ♻️ Waste Classification
+        </div>
 
-            <p>
-              <span className="font-medium">Category:</span> {prediction}
-            </p>
+        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+          🧠 AI-Powered Predictions
+        </div>
 
-            <p>
-              <span className="font-medium">Confidence:</span> {confidence}%
-            </p>
-
-          </div>
-        )}
+        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+          🌱 Environmental Awareness
+        </div>
 
       </div>
 
